@@ -1,7 +1,7 @@
 <?php
 
 
-namespace EnjoysCMS\WYSIWYG\TinyMCE;
+namespace EnjoysCMS\WYSIWYG\CKEditor5;
 
 use EnjoysCMS\Core\Components\Helpers\Assets;
 use EnjoysCMS\Core\Components\WYSIWYG\WysiwygInterface;
@@ -23,6 +23,8 @@ class CKEditor5 implements WysiwygInterface
 
     private function initialize()
     {
-        Assets::js(__DIR__ . '/node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js');
+        Assets::js([
+                       __DIR__ . '/node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js'
+                   ]);
     }
 }
