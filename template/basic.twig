@@ -1,0 +1,14 @@
+{% do asset('js', [
+    'WYSIWYG/ckeditor5/node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js',
+
+]) %}
+<script>
+    ClassicEditor
+        .create( document.querySelector( '{{ selector }}' ) )
+        .then( editor => {
+            console.log( editor );
+        } )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
