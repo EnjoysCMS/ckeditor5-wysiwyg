@@ -13,6 +13,7 @@ class CKEditor5 implements WysiwygInterface
     public function __construct(string $template = null)
     {
         $this->template = $template ?? '@wysisyg/ckeditor5/template/basic.twig';
+        Assets::js(__DIR__.'/node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js');
     }
 
     public function getTwigTemplate()
