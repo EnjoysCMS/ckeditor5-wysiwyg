@@ -43,7 +43,7 @@ class CKEditor5 implements ContentEditorInterface
 
     public function initialize(): void
     {
-        $this->assets->add('css',__DIR__ . '/../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js');
+        $this->assets->add('js',__DIR__ . '/../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js');
     }
 
     private function getTemplate(): ?string
