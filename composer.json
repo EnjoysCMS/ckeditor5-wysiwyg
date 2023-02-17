@@ -1,22 +1,17 @@
 {
     "name": "enjoyscms/ckeditor5",
     "description": "Wysiwyg CKEditor5 for EnjoysCMS",
-    "type": "enjoyscms-wysiwyg",
     "require": {
         "php": "^8.0",
-        "enjoyscms/core": "^4.0 <4.8"
+        "enjoyscms/core": "^4.7"
     },
     "autoload": {
         "psr-4": {
-            "EnjoysCMS\\WYSIWYG\\CKEditor5\\": "src/"
+            "EnjoysCMS\\ContentEditor\\CKEditor5\\": "src/"
         }
     },
-    "extra": {
-        "module-name": "CKEditor5 WYSIWYG Editor",
-        "use-migrations": false
-    },
     "scripts": {
-        "post-install-cmd": "EnjoysCMS\\WYSIWYG\\CKEditor5\\Composer::assetsInstall",
-        "post-update-cmd": "EnjoysCMS\\WYSIWYG\\CKEditor5\\Composer::assetsInstall"
+        "post-install-cmd": "EnjoysCMS\\ContentEditor\\CKEditor5\\Composer::assetsInstall",
+        "post-update-cmd": "EnjoysCMS\\ContentEditor\\CKEditor5\\Composer::assetsInstall"
     }
 }

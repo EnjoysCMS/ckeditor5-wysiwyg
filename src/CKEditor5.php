@@ -1,28 +1,89 @@
 <?php
 
 
-namespace EnjoysCMS\WYSIWYG\CKEditor5;
+namespace EnjoysCMS\ContentEditor\CKEditor5;
 
-use EnjoysCMS\Core\Components\Helpers\Assets;
-use EnjoysCMS\Core\Components\WYSIWYG\WysiwygInterface;
+use Enjoys\AssetsCollector;
+use EnjoysCMS\ContentEditor\Summernote\NotSetupVendor;
+use EnjoysCMS\Core\Components\ContentEditor\ContentEditorInterface;
+use Psr\Log\LoggerInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
-class CKEditor5 implements WysiwygInterface
+class CKEditor5 implements ContentEditorInterface
 {
-    private ?string $twigTemplate = null;
+    private ?string $selector = null;
 
-    public function __construct()
-    {
-        Assets::js(__DIR__ . '/../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js');
+    /**
+     * @throws \Exception
+     */
+    public function __construct(
+        private Environment $twig,
+        private AssetsCollector\Assets $assets,
+        private LoggerInterface $logger,
+        private ?string $template = null
+    ) {
+        if (!file_exists(__DIR__ . '/../node_modules/@ckeditor')) {
+            $command = sprintf('cd %s && yarn install', realpath(__DIR__.'/..'));
+            try {
+                $result = passthru($command);
+                if ($result === false){
+                    throw new \Exception();
+                }
+            }catch (\Throwable){
+                throw new \RuntimeException(sprintf('Run: %s', $command));
+            }
+        }
+
+        $this->initialize();
     }
 
-    public function getTwigTemplate(): string
+
+    public function initialize(): void
     {
-        return $this->twigTemplate ?? '@wysiwyg/ckeditor5/template/basic.twig';
+        $this->assets->add('css',__DIR__ . '/../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js');
+    }
+
+    private function getTemplate(): ?string
+    {
+        return $this->template ?? __DIR__.'/../template/basic.twig';
     }
 
 
-    public function setTwigTemplate(?string $twigTemplate): void
+    public function setSelector(string $selector): void
     {
-        $this->twigTemplate = $twigTemplate;
+        $this->selector = $selector;
+    }
+
+    public function getSelector(): string
+    {
+        if ($this->selector === null) {
+            throw new \RuntimeException('Selector not set');
+        }
+        return $this->selector;
+    }
+
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    public function getEmbedCode(): string
+    {
+        $twigTemplate = $this->getTemplate();
+        if (!$this->twig->getLoader()->exists($twigTemplate)) {
+            throw new \RuntimeException(
+                sprintf("ContentEditor: (%s): Нет шаблона в по указанному пути: %s", self::class, $twigTemplate)
+            );
+        }
+        return $this->twig->render(
+            $twigTemplate,
+            [
+                'editor' => $this,
+                'selector' => $this->getSelector()
+            ]
+        );
     }
 }
