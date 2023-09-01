@@ -7,11 +7,19 @@
     },
     "autoload": {
         "psr-4": {
-            "EnjoysCMS\\ContentEditor\\CKEditor5\\": "src/"
+            "EnjoysCMS\\ContentEditor\\CKEditor5\\": "src/",
+            "EnjoysCMS\\ContentEditor\\CKEditor5\\Composer\\Scripts\\": "scripts/"
         }
     },
     "scripts": {
-        "post-install-cmd": "EnjoysCMS\\ContentEditor\\CKEditor5\\Composer::assetsInstall",
-        "post-update-cmd": "EnjoysCMS\\ContentEditor\\CKEditor5\\Composer::assetsInstall"
+        "ckeditor5-assets-install": "EnjoysCMS\\ContentEditor\\CKEditor5\\Composer\\Scripts\\AssetsInstallCommand",
+        "post-install-cmd": [
+            "echo -e \"\\x1b[1mCKEditor 5\\x1b[00m\"",
+            "@ckeditor5-assets-install"
+        ],
+        "post-update-cmd": [
+            "echo -e \"\\x1b[1mCKEditor 5\\x1b[00m\"",
+            "@ckeditor5-assets-install"
+        ]
     }
 }
